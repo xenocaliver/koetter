@@ -1,0 +1,1284 @@
+%%This is a very basic article template.
+%%There is just one section and two subsections.
+\documentclass[12pt]{jarticle}
+\usepackage{amsmath}  %AMSTeX機能を利用
+\usepackage{amsfonts}
+\usepackage{amssymb}  %AMSTeXの記号を利用
+\usepackage{framed}
+\usepackage{mathrsfs} %AMSTeXの花文字を利用
+\usepackage{bm}       %イタリック体+ボールド
+\usepackage{indentfirst}
+\usepackage{amsbsy}   %bold italic体のためのパッケージ
+\usepackage{eufrak}   %ドイツ語ひげ文字
+\usepackage{dsfont}   %ds font for unit matrix
+\usepackage{theorem}
+\usepackage{enumerate}
+\usepackage[dvipdfmx]{graphicx}
+%行列記述用パッケージ
+\usepackage{bigdelim}
+\usepackage{multirow}
+\usepackage{array,arydshln}
+%枠用スタイルファイル
+\usepackage{ascmac}
+%改良版verbatim環境用スタイルファイル
+\usepackage{moreverb}
+%jreportでは参考文献が参考図書になってしまうのを修正するコマンド
+%\renewcommand{\bibname}{参考文献}
+%for schematic diagram
+\usepackage[all]{xy}
+% for tensor indices
+\usepackage{tensor}
+% for wick contraction
+%\usepackage{simplewick}
+% for big integral
+\usepackage{relsize}
+% for floating figures extensions
+\usepackage{float}
+% for tabularx
+\usepackage{tabularx}
+% for simultaneous equations
+\usepackage{empheq}
+% page settings
+\setlength{\textwidth}{45zw}      % テキスト幅: 
+\hoffset=-25mm
+\makeatother
+%%%%%% for theorem setting use package amsthm.sty%%%%%
+%%%%%% Please refer to http://osksn2.hep.sci.osaka-u.ac.jp/~naga/miscellaneous/tex/tex-tips5.html %%%%%
+% newtheorem declarations
+\theoremstyle{break}
+\newtheorem{theorem}{定理}[section]
+\newtheorem{lemma}[theorem]{補題}
+\newtheorem{corollary}[theorem]{系}
+\newtheorem{claim}[theorem]{主張}
+\newtheorem{remark}[theorem]{注意}
+\newtheorem{example}[theorem]{例}
+\newtheorem{definition}[theorem]{定義}
+\newtheorem{proposition}[theorem]{命題}
+\newtheorem{assumption}[theorem]{仮定}
+\newtheorem{condition}[theorem]{条件}
+\newtheorem{exproblem}[theorem]{例題}
+\newtheorem{exercise}{問題}[section]
+
+\newcommand{\qed}{$\blacksquare$}
+% define solution environment equivalent to proof environment
+%%http://d.hatena.ne.jp/abenori/20120108
+\newenvironment{solution}[1][解答]{\par
+\vskip.5\Cvs
+\noindent
+{\bfseries #1}\par
+}{\hfill ■\par
+\vskip.5\Cvs
+}
+\newenvironment{proof}[1][証明:]{\par
+\vskip.5\Cvs
+\noindent
+{\bfseries #1}\par
+}{\hspace*{\fill}\qed\par
+\vskip.5\Cvs
+}
+%italic Gamma
+\def\itGamma{\mathit{\Gamma}}
+% italic Omega
+\def\itOmega{\mathit{\Omega}}
+% italic Delta
+\def\itDelta{\mathit{\Delta}}
+% italic Lambda
+\def\itLambda{\mathit{\Lambda}}
+% non-zero 2dim complex space
+\def\nonzerocomplexspace{\mathbb{C}^{2}\backslash\{(0,0)\}}
+% mathbb F
+\def\bF{\mathbb{F}}
+% regular shief
+\def\calo{\mathcal{O}}
+% caligraphic M
+\def\calm{\mathcal{M}}
+% caligraphic F
+\def\calf{\mathcal{F}}
+% caligrapchic G
+\def\calg{\mathcal{G}}
+% caligraphic H
+\def\calh{\mathcal{H}}
+% universal cover
+\def\coveru{\mathcal{U}}
+%caligraphic U
+\def\calu{\mathcal{U}}
+% another universal cover
+\def\coverv{\mathcal{V}}
+% a set consist of differential forms
+\def\cala{\mathcal{A}}
+% constant on Lie algebra commutator
+\def\caln{\mathcal{N}}
+% image symbol
+\def\image{\operatorname{Img}}
+% projective line
+\def\pline{\mathbb{P}^{1}}
+% natural number set
+\def\bN{\mathbb{N}}
+% complex number field
+\def\bC{\mathbb{C}}
+% integer number field
+\def\bZ{\mathbb{Z}}
+% rational number field
+\def\bQ{\mathbb{Q}}
+% real number field
+\def\bR{\mathbb{R}}
+% support
+\def\support{\operatorname{Supp}}
+% order 
+\def\ord{\operatorname{ord}}
+% Homorphism
+\def\Hom{\operatorname{Hom}}
+% Kernel
+\def\Ker{\operatorname{Ker}}
+% Autmoiphism
+\def\Aut{\operatorname{Aut}}
+% Divisor
+\def\div{\operatorname{div}}
+% Endomorphism
+\def\End{\operatorname{End}}
+%Trace
+\def\Tr{\operatorname{Tr}}
+%adjoint representation
+\def\ad{\operatorname{ad}}
+%diagonal
+\def\diag{\operatorname{diag}}
+%rank
+\def\rank{\operatorname{rank}}
+%bold greek symbols
+\def\balpha{\boldsymbol{\alpha}}
+\def\bbeta{\boldsymbol{\beta}}
+\def\bgamma{\boldsymbol{\gamma}}
+\def\bdelta{\boldsymbol{\delta}}
+\def\blambda{\boldsymbol{\lambda}}
+\def\bomega{\boldsymbol{\omega}}
+\def\bsigma{\boldsymbol{\sigma}}
+\def\bxi{\boldsymbol{\xi}}
+\def\btheta{\boldsymbol{\theta}}
+\def\bomega{\boldsymbol{\omega}}
+\def\dsone{\mathds{1}}
+\def\cald{\mathcal{D}}
+\def\Tr{\operatorname{Tr}}
+\def\itLambda{\mathit{\Lambda}}
+\def\hsymb#1{\mbox{\strut\rlap{\smash{\Huge$#1$}}\quad}}
+%%%%%%%%%%%%%
+\title{\bf{A Fast Parallel Implementation of a Berlekamp-Massey Algorithm for
+Algebraic-Geometric Codes}}
+\date{\hfill}
+\author{\bf{Ralf K\"{o}tter}}
+\date{JULY 1998}
+\begin{document}
+\maketitle
+
+\section{概要}
+BCH符号，Reed-Solomon符号の復号に使われる代表的なアルゴリズムにBerlekamp-Massey法
+がある。これをさらに改良した復号法がBerlekamp-Massey-Sakata法\cite{Sakata1990207}
+\cite{Sakata1991191}\cite{476248}である(以下BMS法と呼ぶ)。BMS法はFeng-Rao限界
+\cite{179340}まで訂正しうる復号法として知られており，大変強力である。
+
+本論文\cite{681314}では，BMS法をVLSI上に実装できるように改良を加えたアルゴリズムを提案している。
+
+\section{復号の一般論}
+本節では復号の一般論について解説する。受信語$\bm{y}$に$\nu$個の誤りが発生し，
+その位置が$X_{1},X_{2},\cdots X_{\nu}$とする。そして，誤った値が
+$e_{i_{1}},\cdots,e_{i_{\nu}}$とする。この符号が$t$個までの誤りを訂正できるとすると，
+{\bf シンドローム}が以下のように定義できる。
+\begin{framed}
+\begin{definition}[{\bf シンドローム}]
+\begin{eqnarray}
+S_{1}&=&e_{i_{1}}X_{1}+e_{i_{2}}X_{2}+\cdots+e_{i_{\nu}}X_{\nu}\nonumber\\
+S_{2}&=&e_{i_{1}}X_{1}^{2}+e_{i_{2}}X_{2}^{2}+\cdots+e_{i_{\nu}}X_{\nu}^{2}\nonumber\\
+\vdots&&\vdots\nonumber\\
+S_{2t}&=&e_{i_{1}}X_{1}^{2t}+e_{i_{2}}X_{2}^{2t}+\cdots+e_{i_{\nu}}X_{\nu}^{2t}\nonumber
+\end{eqnarray}
+\end{definition}
+\end{framed}
+\begin{framed}
+\begin{definition}[{\bf 誤り位置多項式}]
+誤り位置多項式とは
+\begin{equation}
+\itLambda(x)\triangleq\prod_{i=1}^{\nu}(1-X_{i}x)\label{eq:error_locator}
+\end{equation}
+である。
+\end{definition}
+\end{framed}
+この定義から分かるように，$x$に可能な値を代入して$0$になったとき，それが誤り位置の逆数
+になる。
+\begin{framed}
+\begin{lemma}
+誤り位置多項式を
+\begin{equation}
+\itLambda(x)=\itLambda_{0}+\itLambda_{1}x+\cdots\itLambda_{\nu}x^{\nu}
+\nonumber
+\end{equation}
+とする。このとき，
+\begin{equation}
+\itLambda_{\nu}S_{j-\nu}+\itLambda_{\nu-1}S_{j-\nu-1}+\cdots+
+\itLambda_{1}S_{j-1}+S_{j}=0\nonumber
+\end{equation}
+が成り立つ。
+\end{lemma}
+\end{framed}
+\begin{proof}
+$X_{l}$が誤り位置だったとすると
+\begin{equation}
+\itLambda(X_{l}^{-1})=0=\itLambda_{\nu}X_{l}^{-\nu}+\itLambda_{\nu-1}X_{l}^{1-\nu}
++\cdots+\itLambda_{1}X_{l}^{-1}+\itLambda_{0}\nonumber
+\end{equation}
+である。両辺に$e_{i_{l}}X_{l}^{j}$をかけると
+\begin{equation}
+e_{i_{l}}(\itLambda_{\nu}X_{l}^{j-\nu}+\itLambda_{\nu-1}X_{l}^{j+1-\nu}+\cdots+
+\itLambda_{1}X_{l}^{j-1}+\itLambda_{0}X_{l}^{j})=0\nonumber
+\end{equation}
+となる。$l$を$1$から$\nu$まで足し上げると
+\begin{equation}
+0=\itLambda_{\nu}\sum_{l=1}^{\nu}e_{i_{l}}X_{l}^{j-\nu}+\itLambda\sum_{l=1}^{\nu}e_{i_{l}}X_{l}^{j+1-l}
++\cdots+\itLambda_{1}\sum_{l=1}^{\nu}e_{i_{l}}X_{l}^{j-1}+\itLambda_{0}\sum_{l=1}^{\nu}e_{i_{l}}X_{l}^{j}
+\nonumber
+\end{equation}
+を得る。シンドロームの定義から
+\begin{equation}
+\sum_{l=1}^{\nu}e_{i_{l}}X_{l}^{j-\nu}=S_{j-\nu}\nonumber
+\end{equation}
+だったわけだから
+\begin{equation}
+\itLambda_{\nu}S_{j-\nu}+\itLambda_{\nu-1}S_{j-\nu+1}+\cdots+
+\itLambda_{1}S_{j-1}+\itLambda_{0}S_{j}=0\nonumber
+\end{equation}
+となり補題の結果を得る。
+\end{proof}
+この結果からBM法やEculid法で誤り位置多項式を求めて，誤り位置を特定すればよい。
+
+二元符号ならここまでで復号は終了だが，多元符号の場合，正しい値を求めねばならない。
+シンドロームの関係式
+\begin{equation}
+S_{j}=\sum_{l=1}^{\nu}e_{i_{l}}X_{l}^{j}\nonumber
+\end{equation}
+を逆用して
+\begin{equation}
+\left(
+\begin{array}{ccccc}
+X_{1}&X_{2}&X_{3}&\cdots&X_{\nu}\\
+X_{1}^{2}&X_{2}^{2}&X_{3}^{2}&\cdots&X_{\nu}^{2}\\
+\vdots&&&&\vdots\\
+X_{1}^{2}&X_{2}^{2t}&X_{3}^{2t}&\cdots&X_{\nu}^{2t}\\
+\end{array}
+\right)\left(
+\begin{array}{c}
+e_{i_{1}}\\
+e_{i_{2}}\\
+\vdots\\
+e_{i_{\nu}}
+\end{array}
+\right)=
+\left(
+\begin{array}{c}
+S_{1}\\
+S_{2}\\
+\vdots\\
+S_{2t}
+\end{array}
+\right)\nonumber
+\end{equation}
+を$e_{i_{l}}$について解けばよい。そして解$(e_{i_{1}},\cdots,e_{i_{\nu}})^{T}$が
+誤り数値となる。
+
+しかし，ハードウェアでこれを解くことは難しいので以下のシンドローム多項式を定義して
+多項式の関係式に変形するのが通常の対応である。
+\begin{framed}
+\begin{definition}[{\bf シンドローム多項式}]
+\begin{equation}
+S(x)\triangleq S_{1}+S_{2}x+S_{3}x^{2}+\cdots
++S_{2t}x^{2t-1}=\sum_{j=0}^{2t-1}S_{j+1}x^{j}\nonumber
+\end{equation}
+を{\bf シンドローム多項式}という。
+\end{definition}
+\end{framed}
+上の連立方程式が解けた形を想定して
+\begin{equation}
+\itOmega(x)=S(x)\itLambda(x)
+\end{equation}
+とする。$x^{2t}$より次数の大きな部分を無視すると誤り数値に関する方程式が
+出来上がる。
+\begin{framed}
+\begin{definition}
+\begin{equation}
+\itOmega(x)\equiv S(x)\itLambda(x)\pmod{x^{2t}}
+\label{eq:key_equation}
+\end{equation}
+を{\bf key-equation}という。また$\itOmega(x)$を{\bf 誤り数値多項式}という。
+\end{definition}
+\end{framed}
+key-equationを解はすぐにわかる。
+\begin{framed}
+\begin{theorem}[{\bf Forneyの公式}]
+誤り数値は
+\begin{equation}
+e_{i_{k}}=-\frac{\itOmega(X_{k}^{-1})}{\itLambda^{\prime}(X_{k}^{-1})}
+\label{eq:forney}
+\end{equation}
+で与えられる。
+\end{theorem}
+\end{framed}
+\begin{proof}
+\begin{equation}
+(1-x^{2t})=(1-x)(1+x+x^{2}+\cdots+x^{2t-1})=(1-x)\sum_{j=0}^{2t-1}x^{j}
+\label{eq:6.35}
+\end{equation}
+であることに注意する。ここで
+\begin{eqnarray}
+\itOmega(x)&\equiv&S(x)\itLambda(x)\quad\pmod{x^{2t}}\nonumber\\
+&\equiv&\left(\sum_{j=0}^{2t-1}\sum_{l=1}^{\nu}e_{i_{l}}X_{l}^{j+1}x^{j}\right)
+\left(\prod_{i=1}^{\nu}(1-X_{i}x)\right)\quad\pmod{x^{2t}}\nonumber\\
+&\equiv&\sum_{l=1}^{\nu}e_{i_{l}}X_{l}\sum_{j=0}^{2t-1}(X_{l}x)^{j}
+\prod_{i=1}^{\nu}(1-X_{i}x)\quad\pmod{x^{2t}}\nonumber\\
+&\equiv&\sum_{l=1}^{\nu}e_{i_{l}}X_{l}\left[(1-X_{l}x)\sum_{j=0}^{2t-1}(X_{l}x)^{j}\right]
+\prod_{i\neq l}^{\nu}(1-X_{i}x)\quad\pmod{x^{2t}}\nonumber
+\end{eqnarray}
+となる。ここで$(\ref{eq:6.35})$を使うと
+\begin{equation}
+\itOmega(x)\equiv\sum_{l=1}^{\nu}e_{i_{l}}X_{l}\prod_{i\neq
+l}(1-X_{i}x)\quad\pmod{x^{2t}}\nonumber
+\end{equation}
+となる。$x=X_{k}^{-1}$とおくと
+\begin{equation}
+\itOmega(X_{k}^{-1})\equiv\sum_{k=1}^{\nu}e_{i_{l}}X_{l}\prod_{i\neq
+l}(1-X_{i}X_{k}^{-1})\nonumber
+\end{equation}
+を得る。$l=k$以外は$0$になるので
+\begin{equation}
+\itOmega(X_{k}^{-1})=e_{i_{k}}X_{k}\prod_{i\neq k}(1-X_{i}X_{k}^{-1})\nonumber
+\end{equation}
+となる。故に
+\begin{equation}
+e_{i_{k}}=\frac{\itOmega(X_{k}^{-1})}{X_{k}\prod_{i\neq k}(1-X_{i}X_{k}^{-1})}
+\nonumber
+\end{equation}
+を得る。ここで
+\begin{equation}
+\itLambda(x)=-\sum_{l=1}^{\nu}X_{l}\prod_{i\neq k}(1-X_{i}x)
+\nonumber
+\end{equation}
+なので
+\begin{equation}
+\itLambda^{\prime}(X_{k}^{-1})=-X_{k}\prod_{i\neq k}(1-X_{i}X_{k}^{-1})
+\nonumber
+\end{equation}
+となり定理の結論を得る。
+\end{proof}
+\begin{example}
+$\bF_{8},t=2$の符号を考える。$\alpha$を$\bF_{8}$の原始元とし，$\alpha^{3}+\alpha+1=0$を
+満たすとする。受信語から構成したシンドローム多項式が
+\begin{equation}
+S(x)=\alpha^{6}+\alpha^{3}x+\alpha^{4}x^{2}+\alpha^{3}\nonumber
+\end{equation}
+とし，{\rm BM}法により誤り位置多項式が
+\begin{equation}
+\itLambda(x)=1+\alpha^{2}x+\alpha x^{2}=(1+\alpha^{3}x)(1+\alpha^{5}x)
+\nonumber
+\end{equation}
+と得られたとする。明らかに誤り位置は$X_{1}=\alpha^{3},X_{2}=\alpha^{5}$である。
+誤り数値多項式は
+\begin{eqnarray}
+\itOmega(x)&\equiv&(\alpha^{6}+\alpha^{3}x+\alpha^{4}x^{2}+\alpha^{3}x^{3})
+(1+\alpha^{2}x+\alpha
+x^{2})\pmod{x^{2t}}\nonumber\\&\equiv&\alpha^{6}+(1+\alpha^{5})x
++(\alpha^{4}+\alpha^{5}+\alpha^{7})x^{2}+(\alpha^{3}+\alpha^{4}+\alpha^{6})x^{3}\quad\pmod{x^{2t}}
+\nonumber
+\end{eqnarray}
+となる。
+\begin{equation}
+\itLambda^{\prime}(x)=\alpha^{2}+2\alpha x=\alpha^{2}\nonumber
+\end{equation}
+よって，{\rm Forney}の公式$(\ref{eq:forney})$より
+\begin{equation}
+e_{i_{k}}=-\left.\frac{\alpha^{6}+x}{\alpha^{2}}\right|_{x=X_{k}^{-1}}
+=\alpha^{4}+\alpha^{5}X_{k}^{-1}\nonumber
+\end{equation}
+となる。$X_{k}=\alpha^{3}$を代入すると
+\begin{equation}
+e_{3}=\alpha^{4}+\alpha^{2}=\alpha(\alpha+1)+\alpha^{2}=\alpha\nonumber
+\end{equation}
+となる。$X_{k}=\alpha^{5}$を代入すると
+\begin{equation}
+e_{5}=\alpha^{4}+1=\alpha(\alpha+1)+1=\alpha^{2}+\alpha+1=\alpha^{5}
+\nonumber
+\end{equation}
+となる。以上から
+\begin{equation}
+e(x)=\alpha x^{3}+\alpha^{5}x^{5}\nonumber
+\end{equation}
+を得る。
+\end{example}
+\section{代数幾何符号入門}
+代数幾何符号の基本的な性質について紹介する。代数幾何学に関する内容は
+\cite{ogiso-AG2002}を参照のこと。
+\begin{framed}
+\begin{definition}[{\bf 代数幾何符号}]
+$\bF_{q}$を有限体，$X$を種数$g(X)$の非特異代数曲線，$G$を$X$上の
+因子とする。そして，有理型関数の集合$L(G)$を
+\begin{equation}
+L(G)\triangleq\{f|\div(f)+G\geqq 0\}\nonumber
+\end{equation}
+と定義する\footnotemark。$D$を$X$上の因子とし，$D\cap
+G=\varnothing$とする。 そして，$D=P_{0}+P_{1}+\cdots+P_{n-1}$とする。このとき，$f\in L(G)$を用いて
+\begin{equation}
+C_{L}(D,G)\triangleq\{(f(P_{0}),\cdots,f(P_{n-1}))|f\in L(G)\}
+\label{eq:def_function_code}
+\end{equation}
+を関数型の{\bf 代数幾何符号}という。さらに
+\begin{equation}
+C_{\itOmega}(D,G)\triangleq C_{L}(D,G)^{\perp}\nonumber
+\end{equation}
+を留数型の代数幾何符号という。さらに，$n>\deg G>2g(X)-2$を満たすとき，
+{\bf 強い意味での代数幾何符号}という。
+\end{definition}
+\end{framed}
+\footnotetext{正確にいうと「因子$G$に付随する正則関数の芽のなす層の$0$次コホモロジー群」である。}
+以下では強い意味での代数幾何符号を扱う。
+
+$($強い意味での$)$代数幾何符号については以下が成り立つ。
+\begin{framed}
+\begin{theorem}
+$n>\deg G>2g(X)-2$のとき
+\begin{eqnarray}
+n&=&\deg D\nonumber\\
+k&=&n-\deg G+g(X)-1\nonumber
+\end{eqnarray}
+が成り立つ。
+\end{theorem}
+\end{framed}
+\begin{proof}
+定義から明らかに$n=\deg D$である。{\rm Riemann-Roch}の定理から
+\begin{equation}
+\dim L(G-D)-\dim L(K_{X}-G+D)=1-g(X)-\deg G+\deg D\nonumber
+\end{equation}
+である。仮定から，$L(K_{X}-G+D)$に関する消滅定理により$\dim L(K_{X}-G+D)=0$である。
+代数幾何符号の定義から$\deg D=n$である。また，$k=\dim L(G-D)$であるから
+\begin{equation}
+k=n-\deg G+g(X)-1\nonumber
+\end{equation}
+を得る。
+\end{proof}
+代数幾何符号では，因子$G$を決めなければ先に進めないことがこれまでの議論でわかる。
+そこで，$G$を$1$点からなる{\bf 1点符号}に限定して議論を進める。
+\begin{example}
+{\rm Klein}曲線
+\begin{equation}
+X^{3}Y+Y^{3}Z=Z^{3}X\nonumber
+\end{equation}
+上の代数幾何符号を構成する。$g(X)=3$で$24$個の$\bF_{8}$有理点をもつ。
+$\alpha$を$\alpha^{3}+\alpha+1=0$を満たす原始根とする。そして
+\begin{eqnarray}
+P_{\infty}&=&(0:1:0)\nonumber\\
+P_{1}&=&(1:0:0)\nonumber\\
+P_{3}&=&(0:0:1)\nonumber
+\end{eqnarray}
+とおくと，有理型関数$X,Y,Z$の因子は
+\begin{eqnarray}
+\div(X)&=&3P_{3}+P_{\infty}\nonumber\\
+\div(Y)&=&3P_{1}+P_{3}\nonumber\\
+\div(Z)&=&3P_{\infty}+P_{1}\nonumber
+\end{eqnarray}
+となる。$\phi_{3}=X/Z$とすると$\phi_{3}$の因子は
+\begin{equation}
+\div(\phi_{3})=2P_{1}+P_{3}-3P_{\infty}\nonumber
+\end{equation}
+となるため，$P_{\infty}$における極の位数は$3$である。次に
+$\phi_{5}=XY/Z$の因子は
+\begin{equation}
+\div(\phi_{5})=4P_{3}+P_{1}-5P_{\infty}\nonumber
+\end{equation}
+なので$\phi_{5}$の$P_{\infty}$での極の位数は$5$である。次に
+\begin{equation}
+\phi_{7}=\frac{Y^{3}}{Z^{2}X}\nonumber
+\end{equation}
+の因子は
+\begin{equation}
+\div(\phi_{7})=9P_{1}-7P_{\infty}\nonumber
+\end{equation}
+となる。よって$\phi_{7}$は$P_{\infty}$で$7$位の極を持つ。これら$3$つの関数を
+使って$L(13P_{\infty})$の基底を作ると
+\begin{equation}
+1,\phi_{3},\phi_{5},\phi_{7},\phi_{3}\phi_{5},\phi_{3}^{3},
+\phi_{3}\phi_{7},\phi_{3}^{2}\phi_{5},\phi_{3}^{4},\phi_{3}^{2}\phi_{7}
+\nonumber
+\end{equation}
+となる。極の位数が連続していない部分は$\{1,2,4\}$である。これを{\bf ギャップ}という。
+
+これら基底関数の間には特別な関係がある。
+\begin{equation}
+(\phi_{5})^{2}=\frac{X^{2}Y^{2}}{Z^{2}}\nonumber
+\end{equation}
+だが，
+\begin{eqnarray}
+\phi_{3}\phi_{7}&=&\frac{Y^{4}Z}{Z^{4}X}\nonumber\\
+&=&\frac{(Z^{3}X-X^{3}Y)Y}{Z^{4}X}\nonumber\\
+&=&\frac{Y}{Z}-\frac{X^{2}Y^{2}}{Z^{4}}\nonumber\\
+&=&\phi_{3}-(\phi_{5})^{2}\nonumber
+\end{eqnarray}
+なので，
+\begin{equation}
+(\phi_{5})^{2}=\phi_{3}\phi_{7}+\phi_{3}=\phi_{10}+\phi_{3}\nonumber
+\end{equation}
+を得る。以上をまとめると
+\begin{equation}
+\phi_{i}\phi_{j}=
+\begin{cases}
+0&i\in\{1,2,4\}\vee j\in\{1,2,4\}\\
+\phi_{i+j}+\phi_{i+j-7}&i\not\in\{1,2,4\}\wedge j\in\{1,2,4\}\wedge
+i,jは3の倍数でない\\
+\phi_{i+j}&上記以外
+\end{cases}
+\nonumber
+\end{equation}
+となる。
+\end{example}
+ここで，代数幾何符号のシンドロームを定義するが，BCH符号のシンドロームはシンドローム
+多項式の各係数である。すなわち，$1$次元の「配列」である。一方，代数幾何符号では，符号語が
+射影平面上の点から成り立っているので，シンドロームは$2$次元の配列にならざるをえない。
+これが，代数幾何符号の難しさの原因である。
+\begin{framed}
+\begin{definition}[{\bf シンドローム行列}]
+\begin{equation}
+S(i,j)\triangleq\sum_{l=0}^{n-1}e_{l}\phi_{i}(P_{l})\phi_{j}(P_{l})
+\label{eq:syndrome_matrix}
+\end{equation}
+を{\bf シンドローム行列}という。
+\end{definition}
+\end{framed}
+行列の要素は$S_{ij}$とかくのが通例だが，後々，添字が複雑になるので，$S(i,j)$と表記する。
+\begin{example}
+先の例の続きをかく。基底関数の性質から，シンドローム行列についても同様の命題が成り立つ。
+すなわち
+\begin{equation}
+S(i,j)=
+\begin{cases}
+0&i\in\{1,2,4\}\vee j\in\{1,2,4\}\\
+S(i+j,0)+S(i+j-7,0)&i\not\in\{1,2,4\}\wedge j\in\{1,2,4\}\wedge
+i,jは3の倍数でない\\
+S(i+j,0)&上記以外
+\end{cases}
+\nonumber
+\end{equation}
+である。
+\end{example}
+\section{復号アルゴリズム}
+$S^{(a,b)}$をシンドローム行列の$a$行$b$列までの部分行列とする。関数$\bsigma\in L(bP_{\infty})\backslash
+L((b-1)P_{\infty})$とし，$\bsigma,\itDelta$が
+\begin{equation}
+\begin{cases}
+S^{(a-1,b)}\bsigma^{T}=\bm{0}&\\
+{\displaystyle\sum_{i=0}^{b}\sigma_{i}S(a,i)=\itDelta}&\\
+\end{cases}
+\nonumber
+\end{equation}
+という連立方程式の解だったとする。このとき，$\sigma$は$(a,b)$で隔差$\itDelta$を与えるという。また，このような
+$\sigma$を帰納的に求めることができる。以下，アルゴリズムを構成していく。
+\begin{framed}
+\begin{lemma}
+関数$\sigma$が$(a,b)$で隔差$\itDelta$を与えるとする。また，関数$\lambda$が$(a,b^{\prime})$
+で隔差$1$を与えるとする。ただし，$b^{\prime}\leqq b$とする。このとき，
+関数$\sigma^{\prime}=\sigma-\itDelta\lambda$は$(a^{\prime},b)$で隔差を与える。
+ただし，$a^{\prime}>a$である。
+\label{lemma:2}
+\end{lemma}
+\end{framed}
+\begin{proof}
+仮定と定義から
+\begin{equation}
+\sum_{i=0}^{b}S(j,i)\sigma^{\prime}(i)=0\quad(0\leqq j<a)\nonumber
+\end{equation}
+が成り立つ。さらに
+\begin{equation}
+\sum_{i=0}^{b}S(a,i)\sigma^{\prime}(i)=\sum_{i=0}^{b}S(a,i)\sigma(i)
+-\itDelta\sum_{i=0}^{b^{\prime}}S(a,i)\lambda(i)=\itDelta-\itDelta=0\nonumber
+\end{equation}
+となるため，$\sigma^{\prime}$は$(a^{\prime},b)$で隔差を与える。ただし，$a^{\prime}>a$である。
+\end{proof}
+次の補題は計算量の少ない{\rm Berlekamp-Massey}法を導く鍵となる補題である。
+以下，$\gamma$を基底の中で最小の極の位数，$G^{\prime}$をギャップの集合とする。
+\begin{framed}
+\begin{lemma}
+関数$\sigma$が$(a,b)$で隔差$\itDelta$を与えるとする。このとき，関数$\phi_{\gamma}\sigma$
+は$(a^{\prime},b+\gamma)$で隔差$\itDelta^{\prime}$を与え，
+\begin{equation}
+a
+\begin{cases}
+>a-\gamma&(a-\gamma\in G^{\prime})\\
+=a-\gamma&(上記以外)
+\end{cases}
+\nonumber
+\end{equation}
+が成り立つ。さらに$a-\gamma\not\in G^{\prime}$ならば$\itDelta^{\prime}=\itDelta$である。
+\label{lemma:3}
+\end{lemma}
+\end{framed}
+\begin{proof}
+\begin{equation}
+\sigma=\sum_{l=0}^{b}\sigma_{l}\phi_{l}\nonumber
+\end{equation}
+とする。仮定により
+\begin{equation}
+\sum_{j=0}^{n-1}e_{j}\sigma(P_{j})\phi_{i}(P_{j})=0\quad(i<a)\nonumber
+\end{equation}
+である。これは
+\begin{equation}
+\sum_{j=0}^{n-1}e_{j}(\phi_{\gamma}(P_{j})\sigma(P_{j}))\phi_{i}(P_{j})=0\quad(i<a-\gamma)
+\nonumber
+\end{equation}
+を意味している。もし，$a-\gamma\not\in
+G^{\prime}$ならば$\phi_{a}=\phi_{\gamma}\phi_{a-\gamma}$
+が成り立つ。したがって
+\begin{equation}
+\sum_{j=0}^{n-1}e_{j}\sigma(P_{j})\phi_{a}(P_{j})=\itDelta\nonumber
+\end{equation}
+は
+\begin{equation}
+\sum_{j=0}^{n-1}e_{j}(\phi_{\gamma}(P_{j})\sigma(P_{j}))\phi_{a-\gamma}(P_{j})=\itDelta
+\nonumber
+\end{equation}
+と書き換えられる。これで，もし$a-\gamma\not\in G^{\prime}$ならば
+$\itDelta^{\prime}=\itDelta$の主張が証明された。
+\end{proof}
+補題$\ref{lemma:2}$と補題$\ref{lemma:3}$を組み合わせると基本的な再帰公式が得られる。
+\begin{framed}
+\begin{lemma}
+$\sigma$を$(a,b)$で隔差$\itDelta$を与える関数とし，$\lambda$を$(a^{\prime},b^{\prime})$
+で隔差$1$を与える関数とする。さらに、$a^{\prime}+b^{\prime}<a+b,a^{\prime}\equiv a\pmod{\gamma}$
+とする。このとき、$(a^{\prime\prime},b^{\prime\prime})(a^{\prime\prime}+b^{\prime\prime}>a+b)$
+で隔差をを与える関数$\sigma^{\prime}$を作れる。すなわち
+\begin{equation}
+\sigma^{\prime}=
+\begin{cases}
+\sigma-\itDelta\phi_{\gamma}^{(a^{\prime}-a)/\gamma}\lambda&a\leqq a^{\prime}\\
+\phi_{\gamma}^{(a^{\prime}-a)/\gamma}\sigma-\itDelta\lambda&a^{\prime}<a
+\end{cases}
+\nonumber
+\end{equation}
+\label{lemma:4}
+\end{lemma}
+\end{framed}
+\begin{proof}
+補題$\ref{lemma:3}$より，$\lambda$に$\phi_{\gamma}^{(a^{\prime}-a)/\gamma}$をかけると
+$\phi_{\gamma}^{(a^{\prime}-a)/\gamma}\lambda$は$(a,b^{\prime}+(a^{\prime}-a))$で
+隔差を与える。一方，仮定により$b>b^{\prime}+(a^{\prime}-a)$は成立しているので，補題
+$\ref{lemma:2}$を思い出すと本補題が成立していることがわかる。$a^{\prime}<a$のときも同様である。
+
+$\phi_{\gamma}^{(a-a^{\prime})/\gamma}\sigma$は$(a^{\prime},b+(a-a^{\prime}))$
+で隔差を与え，その値は$\itDelta$である。補題$\ref{lemma:2}$の成立するための条件
+$b+(a-a^{\prime})>b^{\prime}$は仮定により成立しているため，この場合でも本補題が成立している
+ことがわかる。以上から補題が示された。
+\end{proof}
+
+補題$\ref{lemma:3}$をわかりやすい形にするために，$1$変数多項式を定義する。 関数
+\begin{equation}
+f\triangleq\sum_{i=0}^{b}f_{i}\phi_{i}\quad(ただし，i\in G^{\prime}に対してf_{i}=0)
+\nonumber
+\end{equation}
+に対応して$z$を変数とする$1$変数多項式
+\begin{equation}
+\bar{f}(z)\triangleq\sum_{i=0}^{b}f_{i}z^{b-i}\nonumber
+\end{equation}
+を定義する。相反多項式のような定義は補題$\ref{lemma:4}$の$2$つの場合分けを統合するためである。
+この多項式を導入すると補題$\ref{lemma:4}$を以下のように変形できる。
+\begin{framed}
+\begin{corollary}
+$\sigma,\lambda,\sigma^{\prime}$を補題$\ref{lemma:4}$の通りとする。対応する
+$1$変数多項式$\bar{\sigma},\bar{\lambda},\bar{\sigma^{\prime}}$について
+\begin{equation}
+\bar{\sigma^{\prime}}=\bar{\sigma}-\itDelta z^{(a+b)-(a^{\prime}+b^{\prime})}
+\bar{\lambda}\nonumber
+\end{equation}
+が成り立つ。
+\label{corollary:1}
+\end{corollary}
+\end{framed}
+\begin{proof}
+$a\leqq a^{\prime}$のときの$\sigma^{\prime}$の表示の登場する二項の極の位数の差と
+$a>a^{\prime}$のときの$\sigma^{\prime}$の極の位数の差とは等しくないといけない。
+この差は補題$\ref{lemma:3}$の証明からわかるように$a+b-(a^{\prime}+b^{\prime})$である??。
+
+$\beta$を$\sigma$あるいは$\phi_{\gamma}^{(a-a^{\prime})/\gamma}$の極の位数とすると
+補題$\ref{lemma:4}$より
+\begin{eqnarray}
+\sigma_{\beta-l}^{\prime}&=&\sigma_{b-l}\quad(l=0,1,\cdots,a+b-(a^{\prime}+b^{\prime}-1))\nonumber\\
+\sigma_{\beta-l}^{\prime}&=&\sigma_{b-l}-\itDelta\lambda_{b^{\prime}-b}
+\quad(l=a+b-(a^{\prime}+b^{\prime}),a+b-(a^{\prime}+b^{\prime})-1,\cdots,\beta)\nonumber
+\end{eqnarray}
+となる。負のべき乗の係数は$0$となると理解すれば，これは系$\ref{corollary:1}$の式に一致する。
+\end{proof}
+
+再帰的な公式を導くため，$\sigma^{(r,i)},\lambda^{(r,i)}$という関数の組を考える。
+\begin{framed}
+\begin{definition}
+極における位数が$r$の関数の組$\sigma^{(r,i)},\lambda^{(r,i)}$が{\bf 正しい}とは以下の条件
+を満たすことである。以下の条件を満たす最小の整数$b_{\sigma}^{(r,i)}$が存在する。
+\begin{itemize}
+  \item $b_{\sigma}^{(r,i)}\not\in G^{\prime}$
+  \item $b_{\sigma}^{(r,i)}\equiv i\pmod{\gamma}$
+  \item $a+b_{\sigma}^{(r,i)}>r$であるような$(a,b_{\sigma}^{(r,i)})$で隔差を与える
+\end{itemize}
+関数$\sigma^{(r,i)}$は$(a,b_{\sigma}^{(r,i)})$で隔差を与える関数として定義される。
+もし，関数$\lambda$が$a\equiv j\pmod{\gamma}$という条件を満たして$(a,b)$で隔差を
+与え，$a+b<r$であり，$a_{\lambda}^{(r,i)}$が以下の条件を満たす最大の整数とする。
+\begin{itemize}
+  \item $a_{\lambda}^{(r,i)}\equiv j\pmod{\gamma}$
+  \item $a_{\lambda}^{(r,i)}+b\leqq
+  r$を満たす$(a_{\lambda}^{(r,j)},b)$で隔差を与える関数が存在する
+\end{itemize}
+関数$\lambda^{(r,j)}$は$(a^{(r,j)},b)$で隔差$1$を与える関数とする。そのような
+関数が存在しないときは$\lambda^{(r,j)}=0$とし，
+\begin{equation}
+a_{\lambda}^{(r,j)}=\max_{l\in G^{\prime}}\{l|l\equiv j\pmod{\gamma}\}\nonumber
+\end{equation}
+と定義する。
+
+さらに数$a_{\sigma}^{(r,i)},j^{(r,i)},\itDelta^{(r,i)}$を以下のように定義する。
+\begin{equation}
+a_{\sigma}^{(r,i)}\triangleq r+1-b_{\sigma^{(r,i)}}\nonumber
+\end{equation}
+\begin{equation}
+j^{(r,i)}\triangleq a_{\sigma}^{(r,i)}\pmod{\gamma}\nonumber
+\end{equation}
+\begin{equation}
+\itDelta^{(r+1,i)}\triangleq
+\begin{cases}
+{\displaystyle\sum_{l=0}^{b_{\sigma}^{(r,i)}}\sigma_{l}^{(r,i)}S(a_{\sigma}^{(r,i)},l)}&a_{\sigma}^{(r,i)}\not\in
+G^{\prime}\\
+0&a_{\sigma}^{(r,i)}\in G^{\prime}
+\end{cases}
+\nonumber
+\end{equation}
+\end{definition}
+\end{framed}
+$\sigma^{(r,i)}$と代数幾何符号の復号の間の関係は，以下の補題で明らかになる。
+\begin{framed}
+\begin{lemma}
+代数幾何符号$C_{\itOmega}(D,mP_{\infty})$が与えられたとする。最小距離
+$t<(m-2g(X)+2)/2=d^{\ast}(C_{\itOmega})/2$が与えられたとする。
+このとき誤り位置関数の空間は基底$\phi_{\gamma}^{l_{i}}\sigma^{(m+2g(X)+\gamma-1,i)}(l_{i}\geqq
+0, 0\leqq i<\gamma)$を持つ。さらに誤り位置関数の$P_{\infty}$における極の位数の最小値は
+$\{\sigma^{(m+g(X),i)}\}_{i=0}^{\gamma-1}$の中での最小値で与えられる。
+\end{lemma}
+\end{framed}
+\begin{proof}
+後半をまず示す。
+$f$を この極の位数の最小値を持つ関数とする。{\rm Riemann-Roch}の定理から$f$の極の位数は$f+g+1(=m)$より小さく
+\begin{equation}
+S^{(m-t,t+g)}\bm{f}=\bm{0}\nonumber
+\end{equation}
+の解になっている。次に$f$が誤り位置関数であることを示す。$M(a)$を$(a+1)\times n$の行列とし，その
+要素が$M(i,j)=\phi_{i}(P_{j})$であるとする。シンドローム行列は
+\begin{equation}
+S^{(m-t,t+g)}=M(m-t)\diag(\bm{e})M(t+g)^{T}\nonumber
+\end{equation}
+と分解できる。$\diag(\bm{e})$はベクトル$\bm{e}$が対角要素になっている行列である。
+一方，$\diag(\bm{e})M(t+g)^{T}\bm{f}$は$\bm{e}^{T}$と
+$(f(P_{0}),\cdots,f(P_{n-1}))^{T}$の要素の内積である。一方，$\bm{f}$はパリティ検査行列を
+$M(m-t)$とする符号語である。誤り位置方程式は$\bm{e}$と$\bm{f}$の線形結合であるので，$\bm{0}$
+となり，$\bm{f}$は誤り位置関数である。
+
+最初の主張も同様にして示せる。
+\end{proof}
+補題を$1$つ省略するが，復号アルゴリズムは以下のようになる。
+\begin{framed}
+\begin{theorem}[{\bf アルゴリズム1}]
+{\bf 初期化}
+\begin{align}
+\bar{\sigma}^{(-1,i)}(z)&=1&a_{\sigma}^{(-1,i)}&=l_{i},\quad 0\leqq
+i<\gamma\label{eq:9}
+\end{align}
+\begin{align}
+\bar{\lambda}^{(-1,j)}(z)&=0&a_{\lambda}^{(-1,j)}&=l_{j},\quad 0\leqq j<\gamma
+\label{eq:10}
+\end{align}
+{\bf 再帰計算}
+\begin{equation}
+j^{(r,i)}=a_{\sigma}^{(r,i)}\pmod{\gamma}\label{eq:11}
+\end{equation}
+\begin{equation}
+\itDelta^{(r+1,i)}=
+\begin{cases}
+0&a_{\sigma}^{(r,i)}\in G^{\prime}\\
+{\displaystyle\sum_{h=0}^{r+1-a_{\sigma}^{(r,i)}}\bar{\sigma}_{h}^{(r,i)}S(a_{\sigma}^{(r,i)},r+1-a_{\sigma}^{(r,i)}-h)}
+&上記以外
+\end{cases}
+\label{eq:12}
+\end{equation}
+\begin{equation}
+\delta^{(r,i)}=
+\begin{cases}
+1&(\itDelta^{(r+1,i)}\neq
+0)\wedge(a_{\lambda}^{(r,i)}<a_{\sigma}^{(r,i)})\\
+0&上記以外
+\end{cases}
+\label{eq:13}
+\end{equation}
+\begin{equation}
+\left[
+\begin{array}{c}
+\bar{\sigma}^{(r+1,i)}(z)\\
+\bar{\lambda}^{(r+1,j^{(r,i)})}(z)
+\end{array}
+\right]=\left[
+\begin{array}{cc}
+1&-\itDelta^{(r+1,i)}\\
+\delta^{(r,i)}/\itDelta^{(r+t,i)}z&(1-\delta^{(r,i)})z
+\end{array}
+\right]\left[
+\begin{array}{c}
+\bar{\sigma}^{(r,i)}(z)\\
+\bar{\lambda}^{(r,j^{(r,i)})}(z)
+\end{array}
+\right]\label{eq:14}
+\end{equation}
+\begin{eqnarray}
+a_{\sigma}^{(r+1,i)}&=&(1-\delta^{(r,i)})a_{(\sigma,i)}+\delta^{(r,i)}a_{\lambda}^{(r,j^{(r,i)})}+1\label{eq:15}\\
+a_{\lambda}^{(r+1,j^{(r,i)})}&=&(1-\delta^{(r,i)})a_{\lambda}^{(r,j^{(r,i)})}+\delta^{(r,i)}a_{\sigma}^{(r,i)}\label{eq:16}
+\end{eqnarray}
+$\itDelta^{(r,i)}=0$のとき，$\itDelta^{(r,i)}$による除算結果は$0$になるものと解釈する。
+\end{theorem}
+\end{framed}
+\section{多数決決定論理}
+シンドローム行列$S^{(a,b)}(a+b<m)$がわかったとき，$S(a,b)(a+b>m)$まで決定するアルゴリズムが
+{\rm Feng-Rao}アルゴリズム\cite{179340}である。本節では{\rm Feng-Rao}アルゴリズムの再
+定式化を試みる。まず，
+\begin{equation}
+S(a,b)=S(m+w,0)+\sum_{i=0}^{m+w-1}\varepsilon_{i}^{(a,b)}S(i,0)
+\label{eq:17}
+\end{equation}
+に注意する。これは，代数曲線上の有理型関数の基底の性質からくるものである。$\varepsilon_{i}^{(a,b)}$
+は代数曲線によって決まる定数である。さらに，{\rm Feng-Rao}アルゴリズムに入る前に，{\bf 行列隔差}
+という概念を導入する。行列隔差は
+\begin{eqnarray}
+\rank (S^{(a,b)})&=&\rank(S^{(a-1,b)})+1\nonumber\\
+&=&\rank(S^{(a,b-1)})+1\nonumber\\
+&=&\rank(S^{(a-1,b-1)})+1\nonumber
+\end{eqnarray}
+という性質を満たす。
+\begin{framed}
+\begin{lemma}
+$\rank(S^{(a,b)})$は位置$(a^{\prime},b^{\prime})(a^{\prime}\leqq
+a,b^{\prime}\leqq b)$における行列隔差に等しい。さらに，$S$の任意の行と列は
+高々$1$つの行列隔差を持つ。
+\label{lemma:8}
+\end{lemma}
+\end{framed}
+\begin{proof}
+$\rank(S^{(a,b)})$は$S^{(a,b)}$内の行列隔差を持つ行あるいは列の数に等しい。
+このことから，ある行がそれより上の行の線形結合で表されるとき，その行は行列隔差を持たない
+ことが従う。よって，行列隔差を持つ行あるいは列の数は$\rank(S^{(a^{\prime},b^{\prime})})(a^{\prime}\leqq
+a, b^{\prime}\leqq b)$に等しい。故に任意の行または列は行列隔差$1$しか持たない。
+\end{proof}
+行列隔差と本論文のアルゴリズムの間には以下のような関係がある。
+\begin{framed}
+\begin{lemma}
+$\bar{\sigma}^{(r,i)}(z),\bar{\lambda}^{(r,j)}(z),j\equiv
+a_{\sigma}^{(r,i)}\pmod{\gamma},\itDelta^{(r+1,i)}$が与えられたとする。
+このとき，シンドローム行列$S$は，$\max\{0,\gamma^{-1}(a_{\sigma}^{(r,i)}-a_{\lambda}^{(r,j)})\}$
+個の行列隔差を
+\begin{equation}
+(a_{\sigma}^{(r,i)}-l\gamma,r+1-a_{\sigma}^{(r,i)}+l\gamma)
+\quad(l=0,1,\cdots,\gamma^{-1}(a_{\sigma}^{(r,i)}-a_{\lambda}^{(r,i)})-1)
+\label{eq:18}
+\end{equation}
+の位置で持つ。さらに
+\begin{equation}
+(a,r+1-a)\quad a\equiv a_{\sigma}^{(r,i)}\pmod{\gamma}\nonumber
+\end{equation}
+では行列隔差がない。
+\label{lemma:9}
+\end{lemma}
+\end{framed}
+\begin{proof}
+多項式$\bsigma$の性質$S\bsigma^{T}=\bm{0}$より，位置$(a,r+1-a)(a\equiv
+a_{\sigma}^{(r,i)},a>a_{\sigma}^{(r,i)})$では隔差はない。
+位置$(a,r+1-a)(a\equiv
+a_{\sigma}^{(r,i)},a<a_{\sigma}^{(r,i)})$では隔差を持つ。
+アルゴリズム1の性質から位置$(a,r+1-a),a\equiv a_{\sigma}^{(r,i)},
+a_{\lambda}^{(r,i)}<a<a_{\sigma}^{(r,i)}$で行列隔差を持つ。
+しかし，$a_{\lambda}^{(r,i)}$の定義から，これは矛盾である。
+以上から，補題の条件を満たすすべての行が行列隔差を持つという補題の主張が示された。
+\end{proof}
+アルゴリズム$1$が$m$回の繰り返しで終了したと仮定しよう。次は$a+b=m+1$を満たす
+$S(a,b)$を知る必要がある。これを見つける戦略としては，$\rank(S)$を最小，
+すなわち，$m+1$とすることである。補題$\ref{lemma:9}$はこのためのツールを
+提供してくれる。\cite{179340}で示されたように位置$(a,b)(a+b=m+1)$
+の半分以上は行列隔差を$0$にできる。
+まず，$\hat{S}(m+1,0)=0$と未知シンドロームを推定してみる。そして，
+$(\ref{eq:17})$を用いて$\hat{S}(a,b)$を帰納的に推定していく。そして，
+一時推定隔差
+\begin{equation}
+\hat{\itDelta}^{(m+1,i)}=\hat{S}(a_{\sigma}^{(m,i)},m+1-a_{\sigma}^{(m,i)})
++\sum_{h=1}^{m+1-a_{\sigma}^{(m,i)}}\bar{\sigma}_{h}^{(m,i)}
+S(a_{\sigma}^{(m,i)},m+1-a_{\sigma}^{(m,i)}-h)\label{eq:19}
+\end{equation}
+を計算する。ここで$\bar{\sigma}^{(r,i)}(z)$の定数項は$1$となるように初期化
+する必要がある。ここで$(\ref{eq:12})$より
+\begin{equation}
+\hat{\itDelta}^{(m+1,i)}=\itDelta^{(m+1,i)}-S(m+1,0)
+\nonumber
+\end{equation}
+なので
+\begin{equation}
+\itDelta^{(m+1,i)}=\hat{\itDelta}^{(m+1,i)}+S(m+1,0)\nonumber
+\end{equation}
+となる。ここで$S(m+1,0)$を決定するために多数決決定論理を用いる。すなわち，
+大半の$\itDelta^{(m+1,i)}$は$0$なので補題$\ref{lemma:9}$により$\itDelta^{(m+1,i)}$の多重度
+$\max\{0,a_{\sigma}^{(m,i)}-a_{\lambda}^{(m,j)}\}$を数えることで決定できる。
+以上の議論を整理すると以下のアルゴリズムになる。
+\begin{framed}
+\begin{theorem}[{\bf アルゴリズム2}]
+\begin{description}
+\item[(1)]$\hat{S}(m+1,0)=0$として式$(\ref{eq:19})$を用いて$\hat{\itDelta}^{(m+1,i)}$を計算する。
+この$\hat{\itDelta}^{(m+1,i)}$の集合を$D$とする。
+\item[(2)]重複度
+\begin{equation}
+\sum_{i}\max\{0, a_{\sigma}^{(r,i)}-a_{\lambda}^{(r,j^{(r,i)})}\}\nonumber
+\end{equation}
+が最大の$\hat{\itDelta}^{(m+1,i)}$を特定する。特定した値を$\hat{S}$とする。
+\item[(3)]$S(m+1,0)$と$\itDelta^{(m+1,i)}$を計算する。
+\begin{align}
+S(m+1,0)&=-\hat{S}&\itDelta^{(m+1,i)}=\hat{\itDelta}^{(m+1,i)}+S(m+1,0)
+\nonumber
+\end{align}
+\end{description}
+\end{theorem}
+\end{framed}
+
+%参考文献
+\bibliographystyle{junsrt}
+\bibliography{code}
+%\appendix
+\section{BMS法のサンプルコード}
+SAGEで記述したBMS法のサンプルコードを以下に示す。このサンプルコードは$S(a,b)(a+b\leqq 13)$が
+判明したときに，復号を開始する。そして，多数決決定論理によって$S(a,b)(a+b\leqq 15)$を推定して
+復号を続ける。原著論文の結果と若干異なるが，差分の現れ方から，原著論文の誤りと推定される。
+\begin{verbatim}
+#!/usr/local/sage/default/sage -python
+# coding: UTF-8
+
+r"""
+Copyright (c) by 2014 Yokohama Research Lab., Hitachi, Ltd.
+Hitachi, Ltd. grants to use this program code for product-development or research
+for Hitachi, Ltd. and its subsidiary companies. Hitachi, Ltd. prohibits to use this
+program code for any other purposes. This program code is confidential. Do not disclose this program code.
+
+decode a code word with BMS algorithm
+
+AUTHORS:
+
+- Akiyoshi Hashimoto (2014-06): initial implementation
+
+"""
+
+# import command line arguments functions
+import sys
+# for option parser
+import optparse
+# import all sage function
+from sage.all import *
+#
+F = GF(8, 'a')
+a = F.gen()
+K = F['z']
+z = K.gen()
+gamma = 3
+BASISINDEX = FiniteEnumeratedSet([3, 5, 7])
+GAP = FiniteEnumeratedSet([1, 2, 4])
+l = []
+asigma = []
+alambda = []
+delta = []
+Delta = []
+xsigma = []
+xlambda = []
+j = []
+MATRIXSIZE = 128
+
+def initSyndrome():
+    global F
+    global a
+    global MATRIXSIZE
+
+    S = matrix(F, MATRIXSIZE, MATRIXSIZE)      # define syndrome matrix
+    S[0, 0] = a*a*a*a
+    S[3, 0] = a
+    S[5, 0] = a*a*a
+    S[6, 0] = a**6
+    S[7, 0] = 1
+    S[8, 0] = a**6
+    S[10, 0] = a**5
+    S[11, 0] = a*a
+    S[12, 0] = a**4
+    S[13, 0] = a**5
+    S[0, 3] = a
+    S[3, 3] = a**6
+    S[5, 3] = a**6
+    S[7, 3] = a**5
+    S[8, 3] = a*a
+    S[9, 3] = a*a*a*a
+    S[10, 3] = a**5
+    S[0, 5] = a*a*a
+    S[3, 5] = a**6
+    S[5, 5] = a**6
+    S[6, 5] = a*a
+    S[7, 5] = a**4
+    S[8, 5] = a
+    S[0, 6] = a**6
+    S[5, 6] = a*a
+    S[6, 6] = a*a*a*a
+    S[7, 6] = a**5
+    S[0, 7] = 1
+    S[3, 7] = a**5
+    S[5, 7] = a*a*a*a
+    S[6, 7] = a**5
+    S[0, 8] = a**6
+    S[3, 8] = a*a
+    S[5, 8] = a
+    S[3, 9] = a*a*a*a
+    S[0, 10] = a**5
+    S[3, 10] = a**5
+    S[0, 11] = a*a
+    S[0, 12] = a*a*a*a
+    S[0, 13] = a**5
+    return S
+
+def inductionSyndrome(i, j):
+    global F
+    global K
+    global a
+    global z
+    global gamma
+    global BASISINDEX
+    global GAP
+    global S
+    
+    if i in GAP or j in GAP:
+        return 0
+    elif (i not in GAP) and (j not in GAP) and (i%gamma != 0) and (j%gamma != 0):
+        return S[i + j - 7, 0]
+    else:
+        return 0
+
+def initialize():
+    global F
+    global K
+    global a
+    global z
+    global gamma
+    global BASISINDEX
+    global GAP
+    global l
+    global asigma
+    global alambda
+    global xsigma
+    global xlambda    
+    global j
+    global Delta
+    global delta
+    
+    # initialize Syndrome
+    initSyndrome()
+    # initialize l[i]
+    basislist = BASISINDEX.list()
+    l = [0]*len(basislist)
+    for i in range(0, len(l)):
+        x = 0
+        while True:
+            ingap = (x in GAP)
+            k = x%gamma
+            if ingap == False:
+                if k == i:
+                    l[i] = x
+                    break
+            x += 1
+    # initialize a_sigma
+    asigma = [0]*len(l)
+    alambda = [0]*len(l)
+    xsigma  = [0]*len(l)
+    xlambda = [0]*len(l)
+    Delta = [0]*len(l)
+    delta = [0]*len(l)
+    j = [0]*len(l)
+    for i in range(0, len(l)):
+        xsigma[i] = 1 + 0*z
+        asigma[i] = -l[i]
+        xlambda[i] = 0 + 0*z
+        alambda[i] = l[i] - gamma
+    print "{0} {1} {2} {3}".format(asigma, alambda, xsigma, xlambda)
+
+def update(r, vote):
+    global F
+    global K
+    global a
+    global z
+    global gamma
+    global BASISINDEX
+    global GAP
+    global l
+    global asigma
+    global alambda
+    global xsigma
+    global xlambda    
+    global j
+    global Delta
+    global delta
+    global S
+    
+    for i in range(0, len(asigma)):
+        j[i] = asigma[i]%gamma
+    
+    if vote == False:
+        for i in range(0, len(asigma)):
+            csigma = xsigma[i].coeffs()
+            if asigma[i] in GAP:
+                Delta[i] = 0
+            else:
+                Delta[i] = 0
+                for h in range(0, r + 1 - asigma[i] + 1):
+                    for k in range(0, r + 1 - asigma[i] + 1):
+                        csigma.append(0)
+                    Delta[i] += csigma[h]*S[asigma[i], r + 1 - asigma[i] - h] 
+        
+    for i in range(0, len(asigma)):
+#        print "Delta = {0}".format(Delta[i])
+        if Delta[i] != 0 and alambda[j[i]] < asigma[i]:
+            delta[i] = 1
+        else:
+            delta[i] = 0
+    sigmatmp = [0]*len(asigma)
+    lambdatmp = [0]*len(asigma)
+    asigmatmp = [0]*len(asigma)
+    alambdatmp = [0]*len(alambda)
+    for i in range(0, len(asigma)):
+        sigmatmp[i] = xsigma[i]
+        lambdatmp[i] = xlambda[i]
+        asigmatmp[i] = asigma[i]
+        alambdatmp[i] = alambda[i]
+    for i in range(0, len(asigma)):
+        xsigma[i] = sigmatmp[i] - Delta[i]*lambdatmp[j[i]]
+        if Delta[i] == 0:
+            xlambda[j[i]] = (1 - delta[i])*z*lambdatmp[j[i]]
+        else:
+            xlambda[j[i]] = delta[i]*z*sigmatmp[i]/Delta[i]
+             + (1 - delta[i])*z*lambdatmp[j[i]]
+    for i in range(0, len(asigma)):
+        asigma[i] = (1 - delta[i])*asigmatmp[i] + delta[i]*alambdatmp[j[i]] + 1
+#        print "delta = {0} asigmatmp = {1} alambdatmp = {2}".format(delta[i], 
+											asigmatmp[i], alambdatmp[j[i]])
+        alambda[j[i]] = (1 - delta[i])*alambdatmp[j[i]] + delta[i]*asigmatmp[i]
+
+    print "{0} {1} {2} {3} {4}".format(asigma, alambda, xsigma, xlambda, Delta, delta)
+def estimatehatS(m):
+    global S
+    global F
+    global MATRIXSIZE
+    
+    hatS = matrix(F, MATRIXSIZE, MATRIXSIZE)
+    nrows = S.nrows()
+    ncols = S.ncols()
+    for i in range(0, nrows):
+        for j in range(0, ncols):
+            hatS[i, j] = S[i, j]
+    hatS[m, 0] = 0
+    for j in range(1, m + 1):
+        hatS[m - j, j] = inductionSyndrome(m - j, j) 
+#    for j in range(0, m + 1):
+#        print "hatS[{0}, {1}] = {2}".format(m - j, j, hatS[m - j, j])
+    return hatS
+    
+def majorityVoting(m):
+    global F
+    global K
+    global a
+    global z
+    global gamma
+    global BASISINDEX
+    global GAP
+    global l
+    global asigma
+    global alambda
+    global xsigma
+    global xlambda    
+    global j
+    global Delta
+    global delta
+    global S
+    global hatS
+
+    hatDelta = [0]*len(asigma)
+    # estimate temporal estimate syndromes
+    hatS = estimatehatS(m)
+    # estimate temporal estimate discrepancy
+    for i in range(0, len(asigma)):
+        csigma = xsigma[i].coeffs()
+        if asigma[i] in GAP:
+            hatDelta[i] = 0
+        else:
+            Delta[i] = 0
+            for h in range(0, m - asigma[i] + 1):
+                for k in range(0, m - asigma[i] + 1):
+                    csigma.append(0)
+                hatDelta[i] += csigma[h]*S[asigma[i], m  - asigma[i] - h] 
+            hatDelta[i] += hatS[asigma[i], m - asigma[i]]
+#        print "hatDelta[{0}] = {1}".format(i, hatDelta[i])
+    # count ballot
+    asigmatmp = [0]*len(asigma)
+    alambdatmp = [0]*len(alambda)
+    ballot = [0]*len(asigma)
+    for i in range(0, len(asigma)):
+        j[i] = asigma[i]%gamma
+    for i in range(0, len(asigma)):
+        asigmatmp[i] = asigma[i]
+        alambdatmp[i] = alambda[i]
+    for i in range(0, len(asigma)):
+        asigma[i] = (1 - delta[i])*asigmatmp[i] + delta[i]*alambdatmp[j[i]] + 1
+        alambda[j[i]] = (1 - delta[i])*alambdatmp[j[i]] + delta[i]*asigmatmp[i]
+    for i in range(0, len(asigma)):
+        ballot[i] += max(0, asigma[i] - alambda[j[i]])
+#        print "ballot = {0}".format(ballot[i])
+    for i in range(0, len(asigma)):
+        asigma[i] = asigmatmp[i]
+        alambda[j[i]] = alambdatmp[j[i]]
+    # voting
+    maxvote = 0
+    maxindex = 0
+    for i in range(0, len(asigma)):
+        if maxvote < ballot[i]:
+            maxvote = ballot[i]
+            maxindex = i
+    S[m, 0] = -hatDelta[maxindex]
+    for i in range(0, len(asigma)):
+        Delta[i] = hatDelta[i] + S[m, 0]
+        print "Delta[{0}] = {1}".format(i, Delta[i])
+    print "S[{0}, 0] = {1}".format(m, S[m, 0])
+    return S[m, 0]
+    
+def updateSyndrome(ss, m):
+    global S
+    global gamma
+    global GAP
+    S[m, 0] = ss
+    for j in range(1, m + 1):
+        if ((m - j) in GAP) or (j in GAP):
+            S[m - j, j] = 0
+        elif ((m - j) not in GAP) and (j not in GAP) and ((m - j)%gamma != 0)
+       		 and (j%gamma != 0):
+            S[m - j, j] = ss + S[m - 7, 0]
+        else:
+            S[m - j, j] = ss
+#        print "S[{0}, {1}] = {2}".format(m - j, j, S[m - j, j])
+if __name__ == '__main__':
+    S = initSyndrome()
+    initialize()
+    for r in range(-1, 13):
+        update(r, False)
+    ss = majorityVoting(14)
+    updateSyndrome(ss, 14)
+    update(14, True)
+    ss = majorityVoting(15)
+    updateSyndrome(ss, 15)
+    update(15, True)
+\end{verbatim}
+\end{document}
